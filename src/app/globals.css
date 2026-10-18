@@ -1,0 +1,215 @@
+/* ==========================================================================
+   Active Local — design system
+   Built for older eyes: 20px+ base text, strong contrast, generous targets,
+   obvious focus, zero hover-dependent UI. Users can bump text size and turn
+   on high-contrast mode from the header; preferences persist in localStorage
+   and are applied pre-paint by the inline script in layout.tsx.
+   ========================================================================== */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --fs-base: 20px;
+  --color-ink: #16213a;
+  --color-muted: #4a5568;
+  --color-paper: #ffffff;
+  --color-canvas: #f2efe8;
+  --color-brand: #0f5c8c;
+  --color-brand-dark: #0a4063;
+  --color-accent: #b45309;
+  --color-line: #cfc8b8;
+  --color-success: #1e7a3c;
+  --color-danger: #a4161a;
+  --shadow-card: 0 2px 10px rgba(22, 33, 58, 0.08);
+}
+
+/* Text size options: Normal (20px) / Large (24px) / Extra large (28px) */
+html[data-text-size='large'] { --fs-base: 24px; }
+html[data-text-size='xlarge'] { --fs-base: 28px; }
+
+/* High contrast: near-black background, white text, yellow accents. */
+html[data-contrast='high'] {
+  --color-ink: #ffffff;
+  --color-muted: #e8e8e8;
+  --color-paper: #000000;
+  --color-canvas: #000000;
+  --color-brand: #ffd400;
+  --color-brand-dark: #ffe666;
+  --color-accent: #ffb300;
+  --color-line: #ffffff;
+  --color-success: #6fdc8c;
+  --color-danger: #ff8f8f;
+  --shadow-card: none;
+}
+
+html {
+  font-size: var(--fs-base);
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: -apple-system, 'Segoe UI', 'Atkinson Hyperlegible', Verdana, Geneva, system-ui, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Always-visible, high-contrast focus indicator on everything interactive. */
+:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+html[data-contrast='high'] :focus-visible {
+  outline-color: #ffd400;
+  box-shadow: 0 0 0 6px #000;
+}
+
+@layer components {
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    background: var(--color-brand);
+    color: #fff;
+    padding: 14px 22px;
+    font-weight: 700;
+    border-radius: 0 0 10px 0;
+  }
+  .skip-link:focus {
+    left: 0;
+  }
+
+  .card {
+    background: var(--color-paper);
+    border: 2px solid var(--color-line);
+    border-radius: 14px;
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Big, unmistakable buttons. Minimum 48px tall. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 52px;
+    padding: 12px 26px;
+    border-radius: 10px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: background-color 0.15s ease;
+  }
+  .btn:active { transform: translateY(1px); }
+
+  .btn-primary {
+    background: var(--color-brand);
+    color: #fff;
+    border-color: var(--color-brand-dark);
+  }
+  html[data-contrast='high'] .btn-primary { color: #000; }
+  .btn-primary:hover { background: var(--color-brand-dark); }
+
+  .btn-secondary {
+    background: var(--color-paper);
+    color: var(--color-brand);
+    border-color: var(--color-brand);
+  }
+  html[data-contrast='high'] .btn-secondary { color: var(--color-brand); }
+  .btn-secondary:hover { background: var(--color-canvas); }
+
+  .btn-danger {
+    background: var(--color-paper);
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+  }
+
+  .btn-small {
+    min-height: 46px;
+    padding: 8px 18px;
+    font-size: 0.95rem;
+  }
+
+  /* Form fields: large text, thick border, never a hairline. */
+  .field {
+    width: 100%;
+    min-height: 54px;
+    padding: 12px 14px;
+    font-size: 1.05rem;
+    font-family: inherit;
+    color: var(--color-ink);
+    background: var(--color-paper);
+    border: 2px solid var(--color-muted);
+    border-radius: 10px;
+  }
+  textarea.field { min-height: 120px; line-height: 1.5; }
+
+  .field-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: 1.02rem;
+  }
+  .field-hint {
+    display: block;
+    color: var(--color-muted);
+    font-size: 0.92rem;
+    margin-top: 4px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 2px solid var(--color-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+  .badge-free { border-color: var(--color-success); color: var(--color-success); }
+  .badge-accent { border-color: var(--color-accent); color: var(--color-accent); }
+  .badge-brand { border-color: var(--color-brand); color: var(--color-brand); }
+
+  .chip-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 2px solid var(--color-brand);
+    background: var(--color-paper);
+    color: var(--color-brand);
+    font-weight: 700;
+    text-decoration: none;
+    min-height: 48px;
+  }
+  .chip-link:hover { background: var(--color-canvas); }
+
+  .prose-senior p { margin: 0 0 1em 0; font-size: 1.05rem; }
+  .prose-senior p:last-child { margin-bottom: 0; }
+  .prose-senior a { color: var(--color-brand); font-weight: 700; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .site-header, .site-footer, .no-print { display: none !important; }
+  body { background: #fff; }
+  .card { box-shadow: none; }
+}
